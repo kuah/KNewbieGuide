@@ -17,6 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
 //    [KNewbieGuide removeNewbieForKeys:@[@"new"]];
     [KNewbieGuide show:@"new" withImageName:@"登录_填写手机号",@"个人中心_展商中心_重置授权码",nil];
     self.view.backgroundColor = [UIColor whiteColor];
