@@ -8,6 +8,8 @@
 
 #import "RootViewController.h"
 #import "KNewbieGuide.h"
+#import "FirstView.h"
+#import "SecondView.h"
 @interface RootViewController ()
 
 @end
@@ -17,10 +19,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-//    [KNewbieGuide removeNewbieForKeys:@[@"new"]];
-    [KNewbieGuide show:@"new" withImageName:@"登录_填写手机号",@"个人中心_展商中心_重置授权码",nil];
+    //    [KNewbieGuide removeNewbieForKeys:@[@"new"]];
+    [KNewbieGuide showInDebugMode:@"new"];
+    //    [KNewbieGuide show:@"new" withImageName:@"登录_填写手机号",@"个人中心_展商中心_重置授权码",nil];
+    [KNewbieGuide show:@"new" withView:[FirstView new],[SecondView new],nil];
     self.view.backgroundColor = [UIColor whiteColor];
+    
 }
 
 - (void)didReceiveMemoryWarning {

@@ -13,15 +13,17 @@ NSString *const kNewbieGuideNotification = @"kNewbieGuideNotification";
 NSString *const kNewbieGuideUserDefaultRoot = @"kNewbieGuideUserDefaultRoot";
 
 
-@interface KNewbieGuide()
+@interface KNewbieGuide(){
+    NSInteger _index;
+}
 /**
  *   当前还剩下没播放的
  */
-@property (nonatomic,strong)NSMutableArray *imageNames;
+@property (nonatomic,strong)NSMutableArray *views;
 /**
  *   当前显示的view
  */
-@property (nonatomic,strong)UIImageView *showingView;
+@property (nonatomic,strong)UIView <KNewbieGuideDelegate> *showingView;
 /**
  *   当前显示的key
  */
@@ -36,6 +38,7 @@ NSString *const kNewbieGuideUserDefaultRoot = @"kNewbieGuideUserDefaultRoot";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _coreManager = [[KNewbieGuide alloc] init];
+        [_coreManager _clear];
     });
     return _coreManager;
 }
@@ -111,37 +114,113 @@ NSString *const kNewbieGuideUserDefaultRoot = @"kNewbieGuideUserDefaultRoot";
 -(void)show:(NSString *)key withImageNames:(NSArray *)imagesNames{
     if(![[self class] isNewbie:key]) return;
     self.showingKey = key;
-    self.imageNames = MArray_(imagesNames);
+    NSMutableArray *views = MArray();
+    for (NSString * imageName  in imagesNames) {
+        UIImage * image = [UIImage imageNamed:imageName];
+        UIImageView * imageView = [[UIImageView alloc]initWithFrame:[[UIApplication sharedApplication].delegate window].bounds];
+        imageView.image = image;
+        imageView.userInteractionEnabled  = YES;
+        [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playNext)]];
+        [views addObject:imageView];
+    }
+    self.views = views;
+    [self playNext];
+}
+
+
+/**
+ *  @brief 显示新手引导页
+ *  @param key 新手引导页的标致
+ *  @param view view
+ */
++(void)show:(NSString *)key withView:(UIView <KNewbieGuideDelegate>*)view,...{
+    if(![self isNewbie:key]) return;
+    NSMutableArray * viewArray = [NSMutableArray array];
+    NSCAssert(key&&key.length>0 , @"NewbieGuide : Argument couldn't be nil && length must >0");
+    va_list args;
+    va_start(args, view);
+    for (UIView * currentView = view; currentView != nil; currentView = va_arg(args, id)) {
+        NSCAssert([currentView isKindOfClass:UIView.class], @"NewbieGuide : Argument %@ is not a UIView", currentView);
+        [viewArray addObject:currentView];
+    }
+    va_end(args);
+    [self show:key withViews:viewArray];
+}
+/**
+ *  @brief 显示新手引导页
+ *  @param key 新手引导页的标致
+ *  @param views views
+ */
++(void)show:(NSString *)key withViews:(NSArray *)views{
+    [[self shared] show:key withViews:views];
+}
+
+/**
+ *  @brief 显示新手引导页
+ *  @param key 新手引导页的标致
+ *  @param view view
+ */
+-(void)show:(NSString *)key withView:(UIView <KNewbieGuideDelegate>*)view,...{
+    if(![[self class] isNewbie:key]) return;
+    NSMutableArray * viewArray = [NSMutableArray array];
+    NSCAssert(key&&key.length>0 , @"NewbieGuide : Argument couldn't be nil && length must >0");
+    va_list args;
+    va_start(args, view);
+    for (UIView * currentView = view; currentView != nil; currentView = va_arg(args, id)) {
+        NSCAssert([currentView isKindOfClass:UIView.class], @"NewbieGuide : Argument %@ is not a UIView", currentView);
+        [viewArray addObject:currentView];
+    }
+    va_end(args);
+    [self show:key withImageNames:viewArray];
+}
+/**
+ *  @brief 显示新手引导页
+ *  @param key 新手引导页的标致
+ *  @param views views
+ */
+-(void)show:(NSString *)key withViews:(NSArray *)views{
+    if(![[self class] isNewbie:key]) return;
+    self.showingKey = key;
+    self.views = MArray_(views);
+    [self playNext];
+}
+
+/**
+ *  @brief 播放下一个引导页
+ */
++(void)playNext{
+    [[self shared] playNext];
+}
+/**
+ *  @brief 播放下一个引导页
+ */
+-(void)playNext{
     if([NSThread isMainThread]){
-         [self _playNext];
+        [self _playNext];
     }else{
         dispatch_async(dispatch_get_main_queue(), ^{
             [self _playNext];
         });
     }
 }
-
-
-
-#pragma mark -private
-/**
- *  @brief 播放下一个引导页
- */
 -(void)_playNext{
-    if (self.imageNames.count == 0) {
+    if (!self.views||self.views.count==0)return;
+    if (self.views.count!=0 && _index+1==self.views.count) {
         [[self class] _record:self.showingKey];
         [self _clear];
         return;
-    }
-    if (!self.showingView.superview) {
-        self.showingView.image = [UIImage imageNamed:self.imageNames.firstObject];
-        [[[UIApplication sharedApplication].delegate window] addSubview:self.showingView];
-        [[[UIApplication sharedApplication].delegate window] bringSubviewToFront:self.showingView];
     }else{
-        self.showingView.image = [UIImage imageNamed:self.imageNames.firstObject];
+        UIView <KNewbieGuideDelegate>*view = _showingView;
+        if ([view respondsToSelector:@selector(dismiss)]) {
+            [view dismiss];
+        }else{
+            [view removeFromSuperview];
+        }
     }
-    [self.imageNames removeObjectAtIndex:0];
+    self.showingView = self.views[_index+1];
+    _index++;
 }
+
 /**
  *  @brief 播放完对key做记录
  *  @param key key
@@ -156,25 +235,45 @@ NSString *const kNewbieGuideUserDefaultRoot = @"kNewbieGuideUserDefaultRoot";
     [_showingView removeFromSuperview];
     _showingView = nil;;
     _showingKey = nil;
-    _imageNames = nil;
+    _views = nil;
+    _index = -1;
 }
 
 #pragma mark -懒加载
 
--(UIImageView *)showingView{
-    if (!_showingView) {
-        _showingView = [[UIImageView  alloc]initWithFrame:[[UIApplication sharedApplication].delegate window].bounds];
-        _showingView.userInteractionEnabled=  YES;
-        [_showingView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_playNext)]];
+
+-(void)setShowingView:(UIView <KNewbieGuideDelegate>*)showingView{
+    UIWindow * window = [[UIApplication sharedApplication].delegate window];
+    if ([showingView respondsToSelector:@selector(originFrame)]) {
+       showingView.frame = [showingView originFrame];
+    }else{
+        showingView.frame = [[UIApplication sharedApplication].delegate window].bounds;
     }
-    return _showingView;
+    if (![showingView superview]) {
+       [window insertSubview:showingView atIndex:window.subviews.count];
+    }
+    if ([showingView respondsToSelector:@selector(didEnter)]) {
+        [showingView didEnter];
+    }
+  
+    [[[UIApplication sharedApplication].delegate window] bringSubviewToFront:showingView];
+    _showingView  = showingView;
+}
+-(NSMutableArray *)views{
+    if (!_views) {
+        _views = MArray();
+    }
+    return _views;
 }
 
--(NSMutableArray *)imageNames{
-    if (!_imageNames) {
-        _imageNames = MArray();
-    }
-    return _imageNames;
+/**
+ *  @brief 始终显示
+ *  @param key key
+ */
++(void)showInDebugMode:(NSString *)key{
+#if DEBUG
+    [NSUserDefaults mc_setObject:nil forKey:@[kNewbieGuideUserDefaultRoot,key] separatedString:nil];
+#endif
 }
 
 @end

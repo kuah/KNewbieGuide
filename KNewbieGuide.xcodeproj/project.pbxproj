@@ -15,6 +15,8 @@
 		0B75631D20046E3000075FD8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B75631C20046E3000075FD8 /* main.m */; };
 		0B75632620046ED600075FD8 /* KNewbieGuide.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B75632520046ED600075FD8 /* KNewbieGuide.m */; };
 		0B7563292004C66000075FD8 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B7563282004C66000075FD8 /* RootViewController.m */; };
+		0BB112B4200CB46200C0F82A /* SecondView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BB112B1200CB46200C0F82A /* SecondView.m */; };
+		0BB112B5200CB46200C0F82A /* FirstView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BB112B3200CB46200C0F82A /* FirstView.m */; };
 		3E3445ED1C5F68063F7DE1F6 /* libPods-KNewbieGuide.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C71D7DA3015C871C851F641 /* libPods-KNewbieGuide.a */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +36,10 @@
 		0B75632520046ED600075FD8 /* KNewbieGuide.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KNewbieGuide.m; sourceTree = "<group>"; };
 		0B7563272004C66000075FD8 /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		0B7563282004C66000075FD8 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		0BB112B0200CB46100C0F82A /* FirstView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstView.h; sourceTree = "<group>"; };
+		0BB112B1200CB46200C0F82A /* SecondView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondView.m; sourceTree = "<group>"; };
+		0BB112B2200CB46200C0F82A /* SecondView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondView.h; sourceTree = "<group>"; };
+		0BB112B3200CB46200C0F82A /* FirstView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstView.m; sourceTree = "<group>"; };
 		8C71D7DA3015C871C851F641 /* libPods-KNewbieGuide.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KNewbieGuide.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		987AD005C66C067E6F7AEF04 /* Pods-KNewbieGuide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KNewbieGuide.release.xcconfig"; path = "Pods/Target Support Files/Pods-KNewbieGuide/Pods-KNewbieGuide.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,6 +84,10 @@
 				0B75631120046E3000075FD8 /* ViewController.m */,
 				0B7563272004C66000075FD8 /* RootViewController.h */,
 				0B7563282004C66000075FD8 /* RootViewController.m */,
+				0BB112B0200CB46100C0F82A /* FirstView.h */,
+				0BB112B3200CB46200C0F82A /* FirstView.m */,
+				0BB112B2200CB46200C0F82A /* SecondView.h */,
+				0BB112B1200CB46200C0F82A /* SecondView.m */,
 				0B75631320046E3000075FD8 /* Main.storyboard */,
 				0B75631620046E3000075FD8 /* Assets.xcassets */,
 				0B75631820046E3000075FD8 /* LaunchScreen.storyboard */,
@@ -240,7 +250,9 @@
 			files = (
 				0B75632620046ED600075FD8 /* KNewbieGuide.m in Sources */,
 				0B75631220046E3000075FD8 /* ViewController.m in Sources */,
+				0BB112B4200CB46200C0F82A /* SecondView.m in Sources */,
 				0B75631D20046E3000075FD8 /* main.m in Sources */,
+				0BB112B5200CB46200C0F82A /* FirstView.m in Sources */,
 				0B75630F20046E3000075FD8 /* AppDelegate.m in Sources */,
 				0B7563292004C66000075FD8 /* RootViewController.m in Sources */,
 			);
